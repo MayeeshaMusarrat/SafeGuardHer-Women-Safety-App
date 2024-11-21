@@ -5,6 +5,7 @@ import 'package:geocoding/geocoding.dart'; // Import for geocoding
 import 'package:flutter_svg/flutter_svg.dart'; // Import for SVG icons
 import 'package:safeguardher_flutter_app/screens/tracking_screen/track_others_screen.dart';
 import 'package:safeguardher_flutter_app/utils/constants/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../models/alert_model.dart';
 import '../../widgets/custom_widgets/track_others_app_bar.dart';
 
@@ -53,6 +54,7 @@ class TrackCloseContactState extends State<TrackOthersBottomDrawer> {
             panickedPersonName: widget.panickedPersonName,
             panickedPersonProfilePic : widget.panickedPersonProfilePic,
              panickedPersonSafetyCode : widget.panickedPersonSafetyCode,
+
            ),
           DraggableScrollableSheet(
             initialChildSize: 0.18,
@@ -296,31 +298,36 @@ class TrackCloseContactState extends State<TrackOthersBottomDrawer> {
           ),
           SizedBox(height: 10),
           ElevatedButton(
-            onPressed: () {
-              // Handle get directions action
+            onPressed: () async
+            {
+              GeoPoint userLocationStart = widget.panickedPersonAlertDetails.userLocationStart;
+              double latitude = userLocationStart.latitude;
+              double longitude = userLocationStart.longitude;
+              final googleMapsUrl = "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude";
+              if (await canLaunchUrl(Uri.parse(googleMapsUrl)))
+              {
+                await launchUrl(Uri.parse(googleMapsUrl));
+              }
+              else
+              {
+                print("Could not open Google Maps.");
+              }
+
+              if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
+                await launchUrl(Uri.parse(googleMapsUrl));
+              } else {
+                // Handle the error if Google Maps can't be opened
+                print("Could not open Google Maps.");
+              }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.secondary,
+              backgroundColor: AppColors.secondary, // Ensure `AppColors.secondary` is defined
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
               ),
               minimumSize: Size(double.infinity, 50), // Full width button
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  'assets/icons/directions.svg',
-                  width: 24, // Adjust the size of SVG icon
-                  height: 24, // Adjust the size of SVG icon
-                ),
-                SizedBox(width: 10),
-                const Text(
-                  'Get Directions',
-                  style: TextStyle(fontSize: 14, color: Colors.white),
-                ),
-              ],
-            ),
+            child: Text("Get Directions"),
           ),
         ],
       ),

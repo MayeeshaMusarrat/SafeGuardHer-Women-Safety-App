@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:safeguardher_flutter_app/models/alert_model.dart';
 import '../../utils/constants/colors.dart';
 import '../../widgets/custom_widgets/track_others_app_bar.dart';
 import '../home_screen/home_screen.dart';
